@@ -1965,7 +1965,7 @@ i的左孩子２＊i , 右孩子２＊ｉ+ 1;
     __typeof(a) __temp = (a);\
     (a) = (b), (b) = __temp;\
 }
-
+//递减
 typedef struct priority_queue {
     int *data;
     int cnt, size;
@@ -1999,11 +1999,11 @@ int push(priority_queue *q, int val) {
     return 1;
 }
 
-void downupdate(priority_queue *q, int ind) {
+void update(priority_queue *q, int ind) {
     while ((ind << 1) <= q->cnt) {
         int max = ind, l = ind << 1, r = ind << 1 | 1;
-        if (l < q->cnt && q->data[l] > q->data[max]) max = l;
-        if (r < q->cnt && q->data[r] > q->data[max]) max = r;
+        if (l <= q->cnt && q->data[l] > q->data[max]) max = l;
+        if (r <= q->cnt && q->data[r] > q->data[max]) max = r;
         if (max == ind) break;
         swap(q->data[ind], q->data[max]);
         ind = max;
@@ -2015,7 +2015,7 @@ int pop(priority_queue *q) {
     if (q == NULL) return 0;
     if (empty(q)) return 0;
     q->data[1] = q->data[q->cnt--];
-    downupdate(q, 1);
+    update(q, 1);
     return 1;
 }
 
@@ -2043,10 +2043,16 @@ int main () {
         push(q, val);
         printf("insert %d to priority_queue\n", val);
     }
-    output(q);
+  //  output(q);
+    for (int i = 0; i < max_op; i++) {
+        printf("%d ", top(q));
+        pop(q);
+    }
+    printf("\n");
     clear(q);
     return 0;
 }
+
 ```
 
 ### 对堆的插入,删除, 扩列, 排序.
@@ -2067,7 +2073,7 @@ int main () {
     __typeof(a) __temp = (a);\
     (a) = (b), (b) = __temp;\
 }
-
+//递减
 typedef struct priority_queue {
     int *data;
     int cnt, size;
@@ -2476,7 +2482,7 @@ cmp(const void *elem1, const void *elem2)
     free(data);\
 }
 
-//合并排序
+//归并排序
 void merge_sort(int *data, int l, int r) {
     if(r - l <= 1) {
         if (r - l == 1 && data[l] > data[r]) {
@@ -2496,7 +2502,7 @@ void merge_sort(int *data, int l, int r) {
             temp[loc++] = data[y++];
         }
     }
-    memcmp(data + l, temp, sizeof(int) * (r - l + 1));
+    memcpy(data + l, temp, sizeof(int) * (r - l + 1));
     free(temp);
 }
 
@@ -2513,7 +2519,7 @@ void insert_sort(int *data, int n) {
 void bubble_sort (int *data, int n) {
     int times = 1;
     for (int i = 1; i < n && times; i++) {
-        int times = 0;
+         times = 0;
         for (int j = 0; j < n - i; j++) {
             if (data[j] <= data[j + 1]) continue;
             swap(data[j], data[j + 1]);

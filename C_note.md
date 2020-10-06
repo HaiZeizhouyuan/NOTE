@@ -188,7 +188,7 @@ srand(time(0))
 
 for(int i = 0; frm[i]; i++){}
 
-## 5.求字节数
+## 5.求位树数
 
 ```c++
 #include <math.h>
@@ -234,6 +234,18 @@ int(a + 0.5) ;
 ```
 
 
+
+## 10.%d
+
+%d：即为普通的输出。
+
+%2d：按宽度为2输出，右对齐方式输出。若不够两位，左边补空格.
+
+%-2d将数字按宽度为2，采用左对齐方式输出，若数据位数不到2位，则右边补空格
+
+%02d：同样宽度为2，右对齐方式。位数不够，左边补0。
+
+%.2d：从执行效果来看，与%02d一样。
 
 # 函数
 
@@ -876,13 +888,18 @@ struct node2 {
 
 ```c++
 typedef stryct point{
-
+     static int c; 
+    struct node2 b; 4个字节
 } Point;
 
 Point point1;
 ```
 
+这里结构体中包含静态数据成员，而静态数据成员的存放位置与结构体实例的存储地址无关(注意只有在C++中结构体中才能含有静态数据成员，而C中结构体中是不允许含有静态数据成员的)。
 
+而变量c是单独存放在静态数据区的，因此用siezof计算其大小时没有将c所占的空间计算进来。
+
+对于结构体变量，它的自身对齐参数为它里面各个变量最终对齐参数的最大值
 
 ## 9.2共用体
 
@@ -1206,6 +1223,10 @@ int main(){
 
 
 ## 求余
+
+
+
+
 
 ![img](https://ese3a9b6c5d0ic.prissl.qiqiuyun.net/course-activity-446/20200531110711-t7zcnt0bczk0ok4w/87163ee6b4c0b49a_img4?e=1594731173&token=ExRD5wolmUnwwITVeSEXDQXizfxTRp7vnaMKJbO-:LS2qQrW1HoyMtAYOEbwtDX_lF70=)
 

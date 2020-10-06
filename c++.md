@@ -107,3 +107,34 @@ priority_queue<int, vector<int>, greater<int> > q;
 **less -> 数字大的优先级大，数字大被放在队首。所以先输出数字大的**
 
 **greater -> 数字小的优先级大，数字小被放在队首。所以先输出数字小的**
+
+
+
+
+
+# 十进制转１６进制
+
+```c++
+#include <iostream>
+#include <iomanip>
+using std::cin;
+using std::cout;
+using std::endl;
+using std::hex;
+int main(){
+    int a = 22;
+    cout << hex << a << endl;
+    return 0;
+}
+```
+
+## 保留n小数
+
+#include <iomanip>
+
+cout<<fixed<<setprecision(n);
+
+
+
+# 数据类型
+
