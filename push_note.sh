@@ -1,5 +1,4 @@
 #!/bin/bash
 git add *
-nowdate=`date +"%Y-%m-%d__%H:%M:%S"`
-git commit -a -m "${nowdate}"
+git commit -a -m "$1"
 git push
