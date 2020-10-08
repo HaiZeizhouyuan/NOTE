@@ -136,5 +136,35 @@ cout<<fixed<<setprecision(n);
 
 
 
-# 数据类型
+# vector
+
+#include <vector>
+
+using std::vector;
+
+vector<类型>数组对象名(长度);
+
+vector<int>arr(10);
+
+vector<int>arr;
+
+vector<int>v(10, 1);//建立一个有10个元素的vector类型对象初始值设置为1
+
+## size()
+
+返回当前数组的大小(), 也就是当前有多少个元素
+
+## push_back
+
+将一个元素插入到当前 vector 的末尾,这个方法支持自动扩容.
+
+# 自定义函数
+
+int add(int a, int b = 1, int c = 2); 有默认值的形参在后面
+
+自定义的函数成为参数,
+
+func( (*函数名)(double));
+
+int func1((返回值类型) (*函数名)(参数类型)) {}
 
