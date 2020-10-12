@@ -168,3 +168,84 @@ func( (*函数名)(double));
 
 int func1((返回值类型) (*函数名)(参数类型)) {}
 
+
+
+
+
+类
+
+```c++
+#include <iostream>
+using std::cin;
+using std::cout;
+using std::endl;
+class Clock{
+public :
+    void setTime(int newH=0, int newM=0, int newS=0) {
+        second = newS;
+        minute = newM;
+        hour = newH;
+    }
+    void showTime();
+private:
+    int second, minute, hour;
+    
+};
+
+void Clock:: showTime() {
+    cout << hour << ":" << minute << ":" << second << endl;
+}
+
+int main () {
+    Clock MyClock;
+    int second, minute, hour;
+    cin >> second >> minute >> hour;
+    MyClock.setTime(second, minute, hour);
+    MyClock.showTime();
+    return 0;
+}
+```
+
+
+
+
+
+## 构造函数
+
+
+
+Clock(){}  类似  Clock(int hour = 0, int  minute = 0, int second = 0) {}
+
+
+
+
+
+## 初始化列表与析构函数
+
+所谓的初始化列表,就是在类的构造函数后面, 写上要用哪个参数,来初始化哪个变量:
+
+构造函数(参数列表):成员变量(常亮或者参数) {
+
+​	//构造函数的函数体
+
+}
+
+```
+clock(int newS, int newM, newH):minute(newM), second(newS), hour(newH) {
+    
+}
+```
+
+
+
+
+
+ 析构函数无返回值也没有任何参数
+
+```
+class clock {
+    ~clock(){}//析构函数
+}
+```
+
+如果希望程序在对象被删除之前, 自动地来完成某些事情吗就可以把代码写到析构函数里
