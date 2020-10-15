@@ -1,4 +1,5 @@
 #!/bin/bash
+nowtime=`date`
 git add *
-git commit -a -m "$1"
+git commit -a -m "${nowtime}"
 git push
