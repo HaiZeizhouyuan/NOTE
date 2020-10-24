@@ -110,8 +110,6 @@ priority_queue<int, vector<int>, greater<int> > q;
 
 
 
-
-
 # 十进制转１６进制
 
 ```c++
@@ -249,3 +247,69 @@ class clock {
 ```
 
 如果希望程序在对象被删除之前, 自动地来完成某些事情吗就可以把代码写到析构函数里
+
+
+
+
+
+## stack
+
+push()入栈
+
+top()  获取栈顶元素
+
+pop()　弹出栈顶元素
+
+empty()可检测stack是否为空
+
+size()　返回stack内元素的个数
+
+# 函数
+
+## count  ()
+
+| 头文件 | #include  <algorithm>                                        |
+| ------ | ------------------------------------------------------------ |
+|        | algorithm头文件定义了一个count的函数，其功能类似于find。这个函数使用一对迭代器和一个值做参数，返回这个值出现次数的统计结果 |
+|        | **count(first,last,value); first是容器的首迭代器，last是容器的末迭代器，value是询问的元素。**<br/>arr.map(); |
+|        |                                                              |
+
+
+
+
+
+## donst auto&, auto &&,auto
+
+    在块作用域、命名作用域、循环初始化语句等等  中声明变量时，关键词auto用作类型指定符。
+    const:修饰符
+
+auto : 
+
+    auto即 for(auto x:range)  这样会拷贝一份range元素，而不会改变range中元素；
+     但是！（重点)  使用for(auto x:vector<bool>)时得到一个proxy class,操作时会改变vector<bool>本身元素。应用：for(bool x:vector<bool>)
+
+auto&:
+
+   当需要修改range中元素，用for(auto& x:range)
+
+ 当vector<bool>返回临时对象，使用auto&会编译错误，临时对象不能绑在non-const l-value reference （左值引用）需使用auto&&,初始化右值时也可捕获
+
+   
+
+const auto&:
+
+当需要修改range中元素，用for(auto& x:range)
+
+ 当只想读取range中元素时，使用const auto&,如：for(const auto&x:range),它不会进行拷贝，也不会修range  .
+
+ 
+
+const auto:                                                                                                                                                                                                                                                       当需要拷贝元素，但不可修改拷贝出来的值时，使用 for(const auto x:range)，避免拷贝开销                 
+
+
+
+   想要拷贝元素：for(auto x:range)
+
+   想要修改元素 :  for(auto &&x:range)
+
+   想要只读元素：for(const auto& x:range)                                                                                              
