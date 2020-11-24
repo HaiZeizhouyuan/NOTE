@@ -1,4 +1,4 @@
-# )一、C语言基本运算符
+# 一、C语言基本运算符
 
 ## __&__  :
 
@@ -30,6 +30,8 @@ n | 1 = n + 1; n 为偶；
 >不同为1；相同为0;
 
 > 若c = a ^ b;则a = b ^ c; b = a ^ c;
+>
+> (0 ^ num) = num
 
 ##  >> ：
 
@@ -4026,6 +4028,661 @@ int main() {
     return 0;
 }
 ```
+
+# 落谷
+
+## 最短路径
+
+### １．Floyd
+
+复杂度O(n^3)
+
+```
+for (int i = 1; i <= n; i++) {
+    for (int j = 1; j <= n; j++) {
+        for (int k = 1; k <= n; k++) {
+            arr[j][k] = min(arr[j][k], arr[j][i] + arr[i][k]);
+        }
+    }
+
+```
+
+
+
+```c++
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int n, m, s, arr[1005][1005];
+
+int main() {
+    memset(arr, 0x3F, sizeof(arr));
+    cin >> n >> m >> s;
+    for (int i = 1; i <= n; i++) {
+        arr[i][i] = 0;
+    }
+    for (int i = 0; i < m; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        arr[a][b] = min(arr[a][b], c);
+    }
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            for (int k = 1; k <= n; k++) {
+                arr[j][k] = min(arr[j][k], arr[j][i] + arr[i][k]);
+            }
+        }
+    }
+    for (int i = 1; i <= n; i++) {
+        if (i != 1) {
+            cout << " ";
+        }
+        if (arr[s][i] == 0x3F3F3F3F) {
+            cout << -1;
+        } else {
+            cout << arr[s][i];
+        }
+    }
+    return 0;
+}
+```
+
+### 2.Dijkstra（无负权边）
+
+```c++
+#include <iostream>
+#include <queue>
+#include <cstring>
+using namespace std;
+
+struct node {
+    int now, dist;
+    bool operator< (const node &b) const {
+        return this->dist > b.dist;
+    }
+};
+
+int n, m, s, arr[1005][1005], ans[1005];
+
+int main() {
+    memset(arr, 0x3F, sizeof(arr));
+    memset(ans, 0x3F, sizeof(ans));
+    cin >> n >> m >> s;
+    for (int i = 0; i < m; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        arr[a][b] = min(arr[a][b], c);
+    }
+    priority_queue<node> que;
+    que.push((node){s, 0});
+    while (!que.empty()) {
+        node temp = que.top();
+        que.pop();
+        if (ans[temp.now] != 0x3F3F3F3F) {
+            continue;
+        }
+        ans[temp.now] = temp.dist;
+        for (int i = 1; i <= n; i++) {
+            if (arr[temp.now][i] != 0x3F3F3F3F) {
+                que.push((node){i, temp.dist + arr[temp.now][i]});
+            }
+        }
+    }
+    for (int i = 1; i <= n; i++) {
+        if (i != 1) {
+            cout << " ";
+        }
+        if (ans[i] == 0x3F3F3F3F) {
+            cout << -1;
+        } else {
+            cout << ans[i];
+        }
+    }
+    cout << endl;
+    return 0;
+}
+```
+
+
+
+### 3链式向前星
+
+```c++
+#include<iostream>
+#include <cstring>
+using namespace std;
+
+struct edge {
+    int e, dist, next;
+};
+
+edge edg[1005];
+
+int n, m, head[10];
+
+int main() {
+    memset(head, -1, sizeof(head));
+    cin >> n >> m;
+    for (int i = 0; i < m; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        edg[i].e = b;
+        edg[i].dist = c;
+        edg[i].next = head[a];
+        head[a] = i;
+    }
+    for (int i = 1; i <= n; i++) {
+        cout << i << ":";
+        for (int j = head[i]; j != -1; j = edg[j].next ) {
+            cout << "(" << edg[j].e << "," << edg[j].dist << ")";
+        }
+        cout << endl;
+    }
+    return 0;
+}
+
+```
+
+
+
+
+
+### 3371
+
+第一个点到第n个点的最短路径
+
+#### 1.dijkstra
+
+```c++
+#include <iostream>
+#include <queue>
+#include <cstring>
+using namespace std;
+
+struct edge {
+    int e, dist, next;
+};
+
+struct node {
+    int now, dist;
+    bool operator< (const node &b) const {
+        return this->dist > b.dist;
+    }
+};
+
+edge edg[500005];
+int n, m, s, ans[10005], head[10005], mark[10005];
+
+int main() {
+    memset(ans, 0x3F, sizeof(ans));
+    memset(head, -1, sizeof(head));
+    cin >> n >> m >> s;
+    for (int i = 0; i < m; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        edg[i].e = b;
+        edg[i].dist = c;
+        edg[i].next = head[a];
+        head[a] = i;
+    }
+    priority_queue<node> que;
+    que.push((node){s, 0});
+    while (!que.empty()) {
+        node temp = que.top();
+        que.pop();
+        if (ans[temp.now] > temp.dist) {
+            ans[temp.now] = temp.dist;
+        } else {
+            continue;
+        }
+        for (int i = head[temp.now]; i != -1; i = edg[i].next) {
+            int e = edg[i].e, d = edg[i].dist;
+            if (ans[e] > ans[temp.now] + d) {
+                que.push((node){e, ans[temp.now] + d});
+            }
+        }
+    }
+    for (int i = 1; i <= n; i++) {
+        if (i != 1) cout << " ";
+        if (ans[i] == 0x3F3F3F3F) {
+            cout << 0x7FFFFFFF;
+        } else {
+            cout << ans[i];
+        }
+    }
+    cout << endl;
+    return 0;
+}
+```
+
+### 2.bellman_ford（有负权边）
+
+```
+for (int i = 1; i <= n; i++) {
+    for (int j = 0; j < m; j++) {
+        ans[edg[i].e] = min(edg[i].e, edg[i].s + edg[i].d);
+    }
+}
+```
+
+
+
+```c++
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int n, m, s, edg[500005][3], ans[10005];
+
+int main() {
+    memset(ans, 0x3F, sizeof(ans));
+    cin >> n >> m >> s;
+    for (int i = 0; i < m; i++) {
+        cin >> edg[i][0] >> edg[i][1] >> edg[i][2];
+    }
+    ans[s] = 0;
+    for (int i = 1; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            ans[edg[j][1]] = min(ans[edg[j][1]], ans[edg[j][0]] + edg[j][2]);
+        }
+    }
+    for (int i = 1; i <= n; i++) {
+        if (i != 1) cout << " ";
+        if (ans[i] == 0x3F3F3F3F) cout << 0x7FFFFFFF;
+        else cout << ans[i];
+    }
+    cout << endl;
+    return 0;
+}
+```
+
+
+
+#### bellman-ford的队列优化
+
+```c++
+using namespace std;
+
+struct edge {
+    int e, dist, next;
+};
+
+edge edg[500005];
+int n, m, s, ans[10005], mark[10005], head[10005];
+
+int main() {
+    memset(ans, 0x3F, sizeof(ans));
+    memset(head, -1, sizeof(head));
+    cin >> n >> m >> s;
+    for (int i = 0; i < m; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        edg[i].e = b;
+        edg[i].dist = c;
+        edg[i].next = head[a];
+        head[a] = i;
+    }
+    queue<int> que;
+    que.push(s);
+    ans[s] = 0;
+    while (!que.empty()) {
+        int temp = que.front();
+        que.pop();
+        mark[temp] = 0;
+        for (int i = head[temp]; i != -1; i = edg[i].next) {
+            int e = edg[i].e, d = edg[i].dist;
+            if (ans[e] > ans[temp] + d) {
+                ans[e] = ans[temp] + d;
+                if (mark[e] == 0) {
+                    que.push(e);
+                    mark[e] = 1;
+                }
+            }
+        }
+    }
+    for (int i = 1; i <= n; i++) {
+        if (i != 1) cout << " ";
+        if (ans[i] != 0x3F3F3F3F) cout << ans[i];
+        else cout << 0x7FFFFFFF;
+    }
+    cout << endl;
+    return 0;
+}
+```
+
+### 1629 邮递员送信
+
+```c++
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<cstdio>
+#include<queue>
+#include<vector>
+using namespace std;
+ 
+struct edge {
+    int e, d, next;
+};
+
+struct node {
+    int now, dist;
+    bool operator< (const node &b)const{
+        return this->dist > b.dist;
+    }
+};
+
+edge edg[2][100005];
+
+int n, m, head[2][1005], ans[2][1005];
+
+void func(int x) {
+    priority_queue<node> que;
+    que.push((node){1, 0});
+    while(!que.empty()) {
+        node temp = que.top();
+        que.pop();
+        if (ans[x][temp.now] <= temp.dist) continue;
+        ans[x][temp.now] = temp.dist;
+        for (int i = head[x][temp.now]; i != -1; i = edg[x][i].next) {
+            int e = edg[x][i].e , d = edg[x][i].d;
+            if (ans[x][e] > ans[x][temp.now] + d) {
+               que.push((node){e, ans[x][temp.now] + d});
+            }
+        }
+    }
+}
+
+int main() {
+    memset(head, -1, sizeof(head));
+    memset(ans, 0x3F, sizeof(ans));
+    cin >> n >> m;
+    for (int i = 0; i < m; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        edg[0][i].e = b;
+        edg[0][i].d = c;
+        edg[0][i].next = head[0][a];
+        head[0][a] = i;
+        edg[1][i].e = a;
+        edg[1][i].d = c;
+        edg[1][i].next = head[1][b];
+        head[1][b] = i;
+    }
+    func(0);
+    func(1);
+    int fin = 0;
+    for (int i = 2; i <=n ; i++) {
+        fin += ans[0][i] + ans[1][i];
+    }
+    cout << fin << endl;
+
+    
+ 
+    return 0;
+}
+
+```
+
+### 最短路计数
+
+```c++
+#include <iostream>
+#include <cstring>
+#include <queue>
+using namespace std;
+
+struct edge {
+    int e, next;
+};
+
+struct node {
+    int now, dist;
+    bool operator< (const node &b) const {
+        return this->dist > b.dist;
+    }
+};
+
+int n, m, mcnt, head[1000005], ans[1000005], cnt[1000005];
+edge edg[4000005];
+
+void add(int x, int y) {
+    edg[mcnt].e = y;
+    edg[mcnt].next = head[x];
+    head[x] = mcnt;
+    mcnt++;
+}
+
+int main() {
+    memset(head, -1, sizeof(head));
+    memset(ans, 0x3F, sizeof(ans));
+    cin >> n >> m;
+    for (int i = 0; i < m; i++) {
+        int a, b;
+        cin >> a >> b;
+        add(a, b);
+        add(b, a);
+    }
+    priority_queue<node> que;
+    que.push((node){1, 0});
+    ans[1] = 0;
+    cnt[1] = 1;
+    while (!que.empty()) {
+        node temp = que.top();
+        que.pop();
+        if (temp.dist > ans[temp.now]) {
+            continue;
+        }
+        for (int i = head[temp.now]; i != -1; i = edg[i].next) {
+            int e = edg[i].e;
+            if (ans[e] > ans[temp.now] + 1) {
+                ans[e] = ans[temp.now] + 1;
+                cnt[e] = cnt[temp.now];
+                que.push((node){e, ans[e]});
+            } else if (ans[e] == ans[temp.now] + 1) {
+                cnt[e] += cnt[temp.now];
+                cnt[e] %= 100003;
+            }
+        }
+    }
+    for (int i = 1; i <= n; i++) {
+        cout << cnt[i] << endl;
+    }
+    return 0;
+}
+```
+
+
+
+
+
+## 最小生成树
+
+###  kruskal
+
+```c++
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+struct edge {
+    int s, e, v;
+};
+
+bool cmp(const edge &a, const edge &b) {
+    return a.v < b.v;
+}
+
+edge edg[200005];
+int n, m, ans, my_union[5005], already = 1;
+
+int find_root(int x) {
+    if (my_union[x] == x) {
+        return x;
+    }
+    return my_union[x] = find_root(my_union[x]);
+}
+
+int main() {
+    cin >> n >> m;
+    for (int i = 0; i < m; i++) {
+        cin >> edg[i].s >> edg[i].e >> edg[i].v;
+    }
+    for (int i = 1; i <= n; i++) {
+        my_union[i] = i;
+    }
+    sort(edg, edg + m, cmp);
+    for (int i = 0; i <= m; i++) {
+        int sr = find_root(edg[i].s), er = find_root(edg[i].e);
+        if (sr != er) {
+            already++;
+            ans += edg[i].v;
+            my_union[sr] = er;
+            if (already == n) {
+                break;
+            }
+        }
+    }
+    if (already == n) {
+        cout << ans << endl;
+    } else {
+        cout << "orz" << endl;
+    }
+    return 0;
+}
+```
+
+### prim
+
+```c++
+#include <iostream>
+#include <queue>
+#include <cstring>
+using namespace std;
+
+struct edge {
+    int e, v, next;
+};
+
+struct node {
+    int now, val;///val:通过权值为多少的边来到now点
+    bool operator< (const node &b) const {
+        return this->val > b.val;
+    }
+};
+
+edge edg[400005];
+int n, m, edg_cnt, head[5005], ans, already, dis[5005], mark[5005];
+
+void add_edge(int s, int e, int v) {
+    edg[edg_cnt].e = e;
+    edg[edg_cnt].v = v;
+    edg[edg_cnt].next = head[s];
+    head[s] = edg_cnt++;
+}
+
+int main() {
+    memset(dis, 0x3F, sizeof(dis));
+    memset(head, -1, sizeof(head));
+    cin >> n >> m;
+    for (int i = 0; i < m; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        add_edge(a, b, c);
+        add_edge(b, a, c);
+    }
+    priority_queue<node> que;
+    que.push((node){1, 0});
+    while (!que.empty()) {
+        node temp = que.top();
+        que.pop();
+        if (mark[temp.now] == 1) continue;
+        mark[temp.now] = 1;
+        ans += temp.val;
+        already++;
+        if (already == n) break;
+        for (int i = head[temp.now]; i != -1; i = edg[i].next) {
+            int e = edg[i].e, v = edg[i].v;
+            if (mark[e] == 0 && dis[e] > v) {
+                dis[e] = v;
+                que.push((node){e, v});
+            }
+        }
+    }
+    if (already == n) {
+        cout << ans << endl;
+    } else {
+        cout << "orz" << endl;
+    }
+    return 0;
+}
+```
+
+## 拓扑排序
+
+```c++
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<cstdio>
+#include<queue>
+#include<vector>
+using namespace std;
+
+struct edge {
+    int e, next;
+
+};
+
+edge edg[500005];
+int n, m, head[5005], in_degree[5005], out_degree[5005], ans[500005];
+
+int main() {
+    memset(head, -1, sizeof(head));
+    cin >> n >> m;
+    for (int i = 0; i < m; i++) {
+        int a, b;
+        cin >> a >> b;
+        edg[i].e = b;
+        edg[i].next = head[a];
+        head[a] = i;
+        in_degree[b]++;
+        out_degree[a]++;
+    }
+
+    queue<int> que;
+    for (int i = 1; i <= n; i++) {
+        if (in_degree[i] == 0) {
+            que.push(i);
+            ans[i] = 1;
+        }
+    }
+    int sum = 0;
+    while(!que.empty()) {
+        int temp = que.front();
+        que.pop();
+        if (out_degree[temp] == 0) sum += ans[temp];
+        for (int i = head[temp]; i != -1; i = edg[i].next) {
+            int e = edg[i].e;
+            in_degree[e] -= 1;
+            ans[e] += ans[temp];
+            ans[e] %= 100000007;
+            if (in_degree[e] == 0) {
+            que.push(e);
+            }
+        }
+    }
+    cout << sum << endl;
+ 
+    return 0;
+}
+
+```
+
+
+
+
 
 # 十二
 

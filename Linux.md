@@ -2,7 +2,9 @@
 
 # "vim 的简单使用
 
-![img](https://ese3a9b6c5d0ic.prissl.qiqiuyun.net/course-activity-272/20190411093248-lntidnybu9wksckc/53eb89158008bece_img3?e=1595998330&token=ExRD5wolmUnwwITVeSEXDQXizfxTRp7vnaMKJbO-:YxZ_EnBKHAgAxmevbog-aF7Myl0=)
+![1605581208059](../../../tmp/1605581208059.png)
+
+
 
 I:行首
 
@@ -22,7 +24,7 @@ o:行下
 
 
 
-![img](https://ese3a9b6c5d0ic.prissl.qiqiuyun.net/course-activity-272/20190411093248-lntidnybu9wksckc/53eb89158008bece_img4?e=1595997433&token=ExRD5wolmUnwwITVeSEXDQXizfxTRp7vnaMKJbO-:Sf54CjOEmdhEpdBcIVo8Q3ITPnQ=)
+
 
 dd　删除一行；
 
@@ -45,7 +47,7 @@ dnG:从第n行删除到光标行
         :%s/from/to/g   ：  对所有行的内容进行替换。把frome替换成to
 ```
 
-![img](https://ese3a9b6c5d0ic.prissl.qiqiuyun.net/course-activity-272/20190411093248-lntidnybu9wksckc/53eb89158008bece_img6?e=1596010456&token=ExRD5wolmUnwwITVeSEXDQXizfxTRp7vnaMKJbO-:ZktlM2qNRPba5Y6iz_Y2ek8KoMk=)
+
 
 ## Clone一个仓库
 

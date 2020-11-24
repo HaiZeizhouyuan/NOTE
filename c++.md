@@ -2,30 +2,7 @@
 
 ##  查找函数
 
-int` `find(``char` `c, ``int` `pos = 0) ``const``;``//从pos开始查找字符c在当前字符串的位置
-int` `find(``const` `char` `*s,``int` `pos = 0) ``const``;``//从pos开始查找字符串s在当前串中的位置
-int` `find(``const` `char` `*s, ``int` `pos, ``int` `n) ``const``;``//从pos开始查找字符串s中前n个字符在当前串中的位置
-int` `find(``const` `string &s,``int` `pos = 0) ``const``;``//从pos开始查找字符串s在当前串中的位置　//查找成功时返回所在位置，失败返回string::npos的值
-int` `rfind(``char` `c, ``int` `pos = npos) ``const``;``//从pos开始从后向前查找字符c在当前串中的位置
-int` `rfind(``const` `char` `*s, ``int` `pos = npos) ``const``;
-int` `rfind(``const` `char` `*s, ``int` `pos, ``int` `n = npos) ``const``;
-int` `rfind(``const` `string &s,``int` `pos = npos) ``const``;　``//从pos开始从后向前查找字符串s中前n个字符组成的字符串在当前串中的位置，成功返回所在位置，失败时返回string::npos的值
-int` `find_first_of(``char` `c, ``int` `pos = 0) ``const``;``//从pos开始查找字符c第一次出现的位置
-int` `find_first_of(``const` `char` `*s, ``int` `pos = 0) ``const``;
-int` `find_first_of(``const` `char` `*s, ``int` `pos, ``int` `n) ``const``;
-int` `find_first_of(``const` `string &s,``int` `pos = 0) ``const``;　``//从pos开始查找当前串中第一个在s的前n个字符组成的数组里的字符的位置。查找失败返回string::npos
-int` `find_first_not_of(``char` `c, ``int` `pos = 0) ``const``;
-int` `find_first_not_of(``const` `char` `*s, ``int` `pos = 0) ``const``;
-int` `find_first_not_of(``const` `char` `*s, ``int` `pos,``int` `n) ``const``;
-int` `find_first_not_of(``const` `string &s,``int` `pos = 0) ``const``;　``//从当前串中查找第一个不在串s中的字符出现的位置，失败返回string::npos
-int` `find_last_of(``char` `c, ``int` `pos = npos) ``const``;
-int` `find_last_of(``const` `char` `*s, ``int` `pos = npos) ``const``;
-int` `find_last_of(``const` `char` `*s, ``int` `pos, ``int` `n = npos) ``const``;
-int` `find_last_of(``const` `string &s,``int` `pos = npos) ``const``;
-int` `find_last_not_of(``char` `c, ``int` `pos = npos) ``const``;
-int` `find_last_not_of(``const` `char` `*s, ``int` `pos = npos) ``const``;
-int` `find_last_not_of(``const` `char` `*s, ``int` `pos, ``int` `n) ``const``;
-int` `find_last_not_of(``const` `string &s,``int` `pos = npos) ``const``;　``//find_last_of和find_last_not_of与find_first_of和find_first_not_of相似，只不过是从后向前查找。
+
 
 # 2、字符串截取
 
@@ -312,4 +289,169 @@ const auto:                                                                     
 
    想要修改元素 :  for(auto &&x:range)
 
-   想要只读元素：for(const auto& x:range)                                                                                              
+   想要只读元素：for(const auto& x:range)       
+
+
+
+
+
+#　图
+
+如题，给出一个有向图，请输出从某一点出发到所有点的最短路径长度。
+
+## flyd
+
+```c++
+#include <iostream>
+#include <cstring>
+#include <cmath>
+using namespace std;
+
+int n, m, s, arr[1005][1005];
+
+int main() {
+    memset(arr, 0x3F, sizeof(arr));
+    cin >> n >> m >> s;
+    for (int i = 1; i <= n; i++) {
+        arr[i][i] = 0;
+    }
+    for (int i = 0; i < m; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        arr[a][b] = min(arr[a][b], c);
+    }
+
+    for (int i = 1;  i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            for (int k = 1; k <= n; k++) {
+                arr[j][k] = min(arr[j][k], arr[j][i] + arr[i][k]);
+            }
+        }
+    }
+
+    for (int i = 1; i <= n; i++) {
+        if (i != 1) {
+            cout << " ";
+        }
+        if (arr[s][i] == 0x3F3F3F3F) {
+            cout << pow(2, 31) - 1;
+        } else {
+            cout << arr[s][i];
+        }
+    }
+    cout << endl;
+ 
+    return 0;
+}
+
+```
+
+​                                                                                       
+
+
+
+## Dijkstra
+
+```c++
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<cstdio>
+#include<queue>
+using namespace std;
+
+struct node {
+    int now, dist;
+    bool operator< (const node &b)  const {
+        return this->dist > b.dist;
+    }
+};
+
+int n, m, s, arr[1005][1005], ans[1005];
+
+int main() {
+    memset(arr, 0x3F, sizeof(arr));
+    memset(ans, 0x3F, sizeof(ans));
+    cin >> n >> m >> s;
+    for (int i = 0; i < m; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        arr[a][b] = min(arr[a][b], c);
+    }
+    priority_queue<node> que;
+    que.push((node){s, 0});
+    while(!que.empty()) {
+        node temp = que.top();
+        que.pop();
+        if (ans[temp.now] != 0x3F3F3F3F) {
+            continue;
+        }
+        ans[temp.now] = temp.dist;
+        for (int i = 1; i <= n; i++) {
+            if (arr[temp.now][i] != 0x3F3F3F3F) {
+                que.push((node){i, temp.dist + arr[temp.now][i]});
+            }
+        }
+    }
+    for (int i = 1; i <= n; i++) {
+        if (i != 1) {
+            cout << " ";
+        }
+        if (ans[i] == 0x3F3F3F3F) {
+            cout << - 1;
+        }
+        else {
+            cout << ans[i];
+        }
+    }
+    cout << endl;
+    return 0;
+}
+
+```
+
+
+
+
+
+## 链式前向星
+
+```c++
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<cstdio>
+#include<queue>
+using namespace std;
+
+struct edge {
+    int e, dist, next;
+};
+
+edge edg[1005];
+int n, m, head[105];
+
+int main() {
+    memset(head,  -1, sizeof(head));
+    cin >> n >> m;
+    for (int i = 0; i < m; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        edg[i].e = b;
+        edg[i].dist = c;
+        edg[i].next = head[a];
+        head[a] = i;
+    }
+
+    for (int i = 1; i <= n; i++) {
+        cout << i << " : ";
+        for (int j = head[i]; j != -1; j = edg[j].next) {
+            cout << "(" << edg[j].e << ", " << edg[j].dist << ") ";
+        }
+        cout << endl;
+    }
+    return 0;
+}
+
+```
+
